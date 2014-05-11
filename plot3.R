@@ -1,0 +1,18 @@
+data <-read.table('household_power_consumption.txt',sep=';',header=TRUE)
+data$DateTime <- paste(data$Date,data$Time)
+data$DateTime <- strptime(as.character(data$DateTime),format = '%d/%m/%Y %H:%M:%S') 
+data$Date  = as.Date(strptime(as.character(data$Date),format = '%d/%m/%Y'))
+data.filtered <- subset(data, Date >= '2007-02-01' & Date <= '2007-02-02')
+data.filtered$Global_active_power <- as.numeric(as.character(data.filtered$Global_active_power))
+
+
+Sys.setlocale(locale = "C")
+data.filtered$Sub_metering_1 <- as.numeric(as.character(data.filtered$Sub_metering_1))
+data.filtered$Sub_metering_2 <- as.numeric(as.character(data.filtered$Sub_metering_2))
+data.filtered$Sub_metering_3 <- as.numeric(as.character(data.filtered$Sub_metering_3))
+png(file='plot3.png')
+plot(data.filtered$DateTime,data.filtered$Sub_metering_1,type="l",xlab = '',ylab = 'Energy sub metering')
+lines(data.filtered$DateTime,data.filtered$Sub_metering_2,col='red')
+lines(data.filtered$DateTime,data.filtered$Sub_metering_3,col='blue')
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),lty=c(1,1,1),col=c("black","red","blue"))
+dev.off()
